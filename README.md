@@ -1,223 +1,128 @@
-# Blue Projeto 01 Módulo - 4  
+# Projeto NEST_JS M04
 
-#### API de integração com o banco de dados PostgreSQL utilizando NestJS e Prisma 
+#### API REST utilizando Nest_JS,Prisma e Postgresql 
 
+<div>
+    <img align="right" alt="Rafa-yoda" height="130" width="260" src="https://wso2.cachefly.net/wso2/sites/all/2021-theme/apim-2021/apim4-animations/apim-page-animation-get-business-insights-and-intelligence-through-APIs.gif">
+</div>
+Projeto final do módulo 03 utilizando o padrão MVC e integração entre back e front.
 
+contem 3 rotas que são interligadas entre elas:
 
-## INICIANDO
+Filmes.
 
-### 	Para iniciar o projeto, primeiro foi instalado o NestJS.
+Genero.
 
-```
-npm i -g @nestjs/cli
-```
+Participantes.
 
-### Em seguida iniciado um novo projeto.
+modelos para incerção dos dados utilizado no schema.prisma.
 
-```
-nest new [nome do projeto]
-```
+Filmes:
 
-### Após a criação do diretório principal, que consideraremos como o ROOT, foi instalado as seguintes dependências.
+	model Filmes {
+  	id              Int             @id @default(autoincrement())
+  	nome            String
+  	imagemUrl       String?
+  	data_lancamento DateTime        @default(now())
+  	duracao         Int
+  	genero_id       Int?
+  	Generos         Generos?        @relation(fields: [genero_id], references: [id])
+  	Participantes   Participantes[]
+	}
 
-```
-npm i prisma -D / npm i @prisma/client
-```
 
-### No arquivo '.env', configuramos a string de conexão com o banco de dados e em seguida definimos os Models no arquivo 'prisma' do diretório "prisma".
+Genero:
 
-### Ao terminar toda a configuração da estrutura do banco de dados, enviamos os dados para sincronizar com o banco de dados com os seguintes comandos.
+	model Generos {
+  	id     Int      @id @default(autoincrement())
+  	nome   String
+  	Filmes Filmes[]
+	}
 
-```
-npx prisma db push
-```
 
+Participantes:
 
+	model Participantes {
+  	id         Int       @id @default(autoincrement())
+  	nome       String
+  	imagemUrl  String?
+  	nascimento DateTime?
+  	film_id    Int?
+  	Filmes     Filmes?    @relation(fields: [film_id], references: [id])
+	}
 
-## Criando o diretório Prisma
 
-### Antes de criar as rotas, precisamos criar um diretório prisma contendo um arquivo 'module' e 'service'
 
-```
-nest g mo prisma
-nest g s prisma
-```
+# Cada rota contem as opções criar, listar todos, listar por id, editar por id e deletar por id.
 
-### No arquivo 'module', adicionamos
+Tabela das rotas:
 
-```
-exports: [PrismaService],
-```
+Filmes:
 
-### Já no arquivo 'service', definimos um script padrão obtida através do próprio site do NestJS
+    /filmes/listall
+    /filmes/listid/id
+    /filmes/update/id
+    /filmes/delete/id
 
-```
-https://docs.nestjs.com/recipes/prisma
-```
+Generos:
 
+    /generos/add
+    /generos/listall
+    /generos/listid/id
+    /generos/update/id
+    /generos/delete/id
 
 
-## Criando as Rotas BASE
+Participantes:
 
-###  Para criar as rotas, dividimos cada uma em um diretório. Cada diretório será composto por um arquivo 'module', 'controller' e 'service'.
+    /participantes/add
+    /participantes/listall
+    /participantes/listid/id
+    /participantes/update/id
+    /participantes/delete/id
+    
 
-### Assim, primeiro criamos o diretório com o comando
+# Funcionamento das rotas, instruções validas para todas as 5 rotas.
 
-```
-nest g res [nome do diretório]
-```
+add:
 
-### Com isso, o NestJS automaticamente criará os arquivos que necessitaremos.
 
-### No arquivo 'module', adicionamos um 'imports: [PrismaModule]' para que consigamos integrar o banco com a rota.
+    utilizando a rota add você consegue adicionar objetos no banco de dados,
+    você precisa seguir o modelo de dados mencionado
+    no inicio deste documento, tambem encontrara os modelos detalhados
+    dentro da pasta models do projeto onde contem um arquivo para cada rota.
 
-### No arquivo 'service', instanciamos o PrismaService dentro da classe 
+listall:
 
-```
-contructor(private readonly prisma:PrismaService) {}
-```
 
-### Agora basta 'chamar' o this.prisma para manipular o banco  
+    utilizando a rota listall você consegue puxar todos os objetos salvos
+    dentro do banco de dados e lista todos eles em formato json.
 
+listid:
 
 
-## Definindo o DTO
+    utilizando a rota listid você consegue puxar um unico objeto 
+    especificado pelo id e recebe ele em formato json.
 
-### Antes de iniciar o CRUD, devemos configurar a classe DTO.
+update:
 
-### Primeiro devemos instalar uma dependência de validação do NestJS
 
-```
-npm i npm i --save class-validator class-transformer
-```
+    utilizando a rota update você consegue alterar as propriedades
+    de um objeto já existente no banco de dados,
+    devemos nos atentar em seguir
+    os mesmos padrões de inserção de dados do add seguindo
+    as orientações dos models de cada rota existente no projeto da api.
 
-### Agora basta adicionar no arquivo main, após definir app, o seguinte script
+delete:
 
-```
-app.useGlobalPipes(new ValidationPipe())
-```
 
-### Na classe CreateDto utilizaremos o próprio tipo gerado pelo Prisma atráves do Model, assim definiremos a classe como uma implementação desse tipo.
+    utilizando a rota delete você consegue apagar
+    um objeto especifico de dentro do banco de dados apontando ele pelo id.
 
-```
-class CreateDto implements Prisma.[Tipo Prisma] {}
-```
-
-### com isso podemos utilizar as várias validações que o NestJS nos fornece bastando acrescentar um Decorator nas propriedades da classe.
-
-```
-class CreateDto implements Prisma.[Tipo Prisma] {
-	@IsString()
-	nome: string
-}
-```
-
-
-
-## CRUD
-
-### Para o crud, será utilizado como exemplo a rota 'generos'. Para visualizar todas as rotas pode utilizar o arquivo swagger digitando a URL: localhost:3000/api
-
-
-
-### /add
-
-```
-Exemplo:
-body: {
-  		"nome": "Ação"
-	  }
-      
-Sucesso: 201 				
-{
-  "id": 14,
-  "nome": "Ação"
-}
-
-Falha: 400 - Error: Bad Request
-```
-
-
-
-### /listall
-
-```
-Exemplo:
-No parameters
-      
-Sucesso: 200 				
-{
-    "id": 7,
-    "nome": "ação",
-    "Filmes": [
-      {
-        "id": 10
-      },
-      {
-        "id": 12
-      },
-      {
-        "id": 9
-      }
-    ]
-  },
-```
-
-
-
-### /listid/:id
-
-```
-Exemplo:
-parâmetro: id
-      
-Sucesso: 200 				
-{
-  "id": 7,
-  "nome": "ação",
-  "Filmes": [
-    {
-      "id": 10
-    },
-    {
-      "id": 12
-    },
-    {
-      "id": 9
-    }
-  ]
-}
-```
-
-
-
-### /update
-
-```
-Exemplo:
-parâmetro: id
-body: {
-  		"nome": "Ação"
-	  }
-      
-Sucesso: 200 				
-{
-  "id": 14,
-  "nome": "Ação"
-}
-```
-
-
-
-### /delete
-
-```
-Exemplo:
-parâmetro: id 
-Sucesso: 200 				
-{
-  "id": 14,
-  "nome": "Ação"
-}
-```
+# O projeto contem uma collection para ser utilizada na extensão thunder client para realizar testes de conexão em todas as rotas junto com o enviroment.
 
+# O projeto esta rodando com o postgresql, siga o env.bkp para utilizar o dotenv caso queira, basta seguir o conteudo do arquivo para realizar a conexão com o DB.
+
+# Para utilizar a api, é preciso instalar o express o prisma e utilizar o comando a seguir para linkar os models db do prisma com o banco de dados:
+
+	npx prisma db push
