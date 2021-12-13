@@ -90,13 +90,13 @@ add:
     utilizando a rota add você consegue adicionar objetos no banco de dados,
     você precisa seguir o modelo de dados mencionado
     no inicio deste documento, tambem encontrara os modelos detalhados
-    dentro da pasta models do projeto onde contem um arquivo para cada rota.
+    no arquivo schema.prisma.
 
 listall:
 
 
     utilizando a rota listall você consegue puxar todos os objetos salvos
-    dentro do banco de dados e lista todos eles em formato json.
+    dentro do banco de dados e listar todos eles em formato json.
 
 listid:
 
@@ -111,7 +111,7 @@ update:
     de um objeto já existente no banco de dados,
     devemos nos atentar em seguir
     os mesmos padrões de inserção de dados do add seguindo
-    as orientações dos models de cada rota existente no projeto da api.
+    as orientações do schema.prisma de cada rota existente no projeto da api.
 
 delete:
 
@@ -123,6 +123,6 @@ delete:
 
 # O projeto esta rodando com o postgresql, siga o env.bkp para utilizar o dotenv caso queira, basta seguir o conteudo do arquivo para realizar a conexão com o DB.
 
-# Para utilizar a api, é preciso instalar o express o prisma e utilizar o comando a seguir para linkar os models db do prisma com o banco de dados:
+# Para utilizar a api, é preciso instalar o express, o prisma e utilizar o comando a seguir para linkar os models db do prisma com o banco de dados:
 
 	npx prisma db push
