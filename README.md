@@ -82,7 +82,7 @@ Participantes:
     /participantes/delete/id
     
 
-# Funcionamento das rotas, instruções validas para todas as 5 rotas.
+# Funcionamento das rotas, instruções validas para todas as 3 rotas.
 
 add:
 
