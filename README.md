@@ -126,3 +126,5 @@ delete:
 # Para utilizar a api, é preciso instalar o express, o prisma e utilizar o comando a seguir para linkar os models db do prisma com o banco de dados:
 
 	npx prisma db push
+# Utilizando o comando a seguir, é possivel utilizar uma versão grafica do prisma para manipular os dados do banco:
+	npx prisma studio
